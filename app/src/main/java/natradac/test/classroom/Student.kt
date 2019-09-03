@@ -14,7 +14,9 @@ data class Student(
 
     @SerializedName("no")
     @Expose
-    var no: String
+    var no: String,
+
+    var status: String? = null
 
 ) {
     override fun toString(): String {

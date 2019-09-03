@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
-          xmlns:uses-permissionandroid="http://schemas.android.com/apk/distribution"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="natradac.test.classroom">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -20,6 +18,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".AttendanceActivity"
+                  android:launchMode="standard">
         </activity>
     </application>
 
