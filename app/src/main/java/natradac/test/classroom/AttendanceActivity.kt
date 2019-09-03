@@ -1,5 +1,8 @@
 package natradac.test.classroom
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -9,6 +12,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.google.zxing.Result
 import com.opencsv.CSVWriter
@@ -30,8 +34,11 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     private var status = ""
     private var title = ""
+    private var titleFile= ""
 
     private var recordAttendance = mutableListOf<Student>()
+
+    private var summaryAttendance = mutableListOf<Student>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +49,12 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         when (intent.hasExtra("FILENAME")) {
             true -> {
                 readStudentData(intent.extras.get("FILENAME") as String)
-                title = "วิชา " + intent.extras.get("SUBJECT").toString() + " ห้อง " + intent.extras.get("ROOM").toString()
+                var subject = intent.extras.get("SUBJECT").toString()
+                var room = intent.extras.get("ROOM").toString()
+                title = "รหัสวิชา $subject ห้อง $room"
+
+                var saveRoom = room.replace("/", "-",true)
+                titleFile = "${subject}ห้อง$saveRoom"
                 tvTitle.text = title
             }
             false -> {
@@ -57,8 +69,23 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
     private fun initListener() {
         btnExport.setOnClickListener {
+
+            Log.i("Test ", "record $recordAttendance")
+            var notRecord = compareList(studentList, recordAttendance)
+            Log.i("Test ", "notrecord $notRecord")
+
+            summaryAttendance = recordAttendance
+
+            for (i in notRecord){
+                i.status = "ขาด"
+                summaryAttendance.add(i)
+            }
             exportToCSV()
         }
+    }
+
+    private fun compareList(first: MutableList<Student>, second: MutableList<Student>): MutableList<Student>{
+        return first.minus(second).toMutableList()
     }
 
     override fun handleResult(rawResult: Result?) {
@@ -203,7 +230,7 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         var today = today()
         var baseDir =
             android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
-        var fileName = "เช็คชื่อ$today.csv"
+        var fileName = "เช็คชื่อ${titleFile}วันที่$today.csv"
         var filePath = baseDir + File.separator + fileName
         var file = File(filePath)
         var writer: CSVWriter
@@ -216,18 +243,42 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             CSVWriter(FileWriter(filePath))
         }
 
-        var dataTopic = arrayOf("", "เช็คชื่อ $title วันที่ ${today()}", "")
+        var dataTopic = arrayOf("เช็คชื่อ $title วันที่ ${today()}")
         writer.writeNext(dataTopic)
 
         var dataHeader = arrayOf("เลขที่", "ชื่อ", "ผล")
         writer.writeNext(dataHeader)
 
-        for (i in recordAttendance) {
+
+        for (i in summaryAttendance) {
             var data = arrayOf(i.no, i.name, i.status)
             writer.writeNext(data)
         }
 
         writer.close()
+
+        var intent = Intent(Intent.ACTION_VIEW)
+        var pIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val CHANNEL_ID = "notification_01"
+        val CHANNEL_NAME = "notification_download"
+
+
+        val mNotificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "NOTIFICATION_CHANNEL_DISCRIPTION"
+            mNotificationManager.createNotificationChannel(channel)
+        }
+
+        val mBuilder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Download $fileName")
+            .setContentText("Complete!")
+            .setContentIntent(pIntent)
+        mNotificationManager.notify(0, mBuilder.build())
 
     }
 
