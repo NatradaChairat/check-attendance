@@ -1,101 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <me.dm7.barcodescanner.zxing.ZXingScannerView
-            android:id="@+id/scanner"
-            android:layout_width="200dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="20dp"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
 
-
-    <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/statusSpinner"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:spinnerMode="dialog"
-            android:layout_gravity="center_horizontal"/>
-
-    <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:textSize="20sp"
-            android:textColor="@android:color/black"
-            android:layout_marginLeft="20dp"
-            android:text="Title"/>
+        <me.dm7.barcodescanner.zxing.ZXingScannerView
+                android:id="@+id/scanner"
+                android:layout_width="200dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"/>
 
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/statusSpinner"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:spinnerMode="dialog"
+                android:layout_gravity="center_horizontal"
+        android:textAlignment="center"/>
 
-        <TextView
-                android:text="เข้าเรียน"
+        <RelativeLayout
+                android:id="@+id/rlContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible">
+
+            <EditText
+                    android:id="@+id/etStudentID"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"/>
+            <Button
+                    android:id="@+id/submit"
+                    android:layout_width="70dp"
+                    android:layout_height="40dp"
+                    android:layout_toRightOf="@id/etStudentID"
+                    android:text="ยืนยัน"
+            />
+
+        </RelativeLayout>
+
+        <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:textSize="20sp"
-                android:textColor="@android:color/black"/>
-
-        <TextView
-                android:id="@+id/btnExport"
-                android:text="Export to Excel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:layout_marginRight="20dp"
-                android:textSize="16dp"
-                android:textColor="@android:color/holo_blue_dark"/>
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="20dp"
+                android:text="Title"/>
 
 
-    </LinearLayout>
-
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_marginTop="20dp"
-                  android:layout_marginLeft="20dp"
-                  android:layout_marginRight="20dp">
-
-        <TableLayout
-                android:id="@+id/table"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="5"/>
+                android:orientation="horizontal">
+
+            <TextView
+                    android:text="เข้าเรียน"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
+
+            <TextView
+                    android:id="@+id/btnExport"
+                    android:text="Export to Excel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/holo_blue_dark"/>
 
 
-        <!--<TextView-->
-        <!--android:id="@+id/displayNo"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="เลขที่"-->
-        <!--android:layout_weight="1"/>-->
-        <!--<TextView-->
-        <!--android:id="@+id/displayName"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="ชื่อ"-->
-        <!--android:layout_weight="3"/>-->
-        <!--<TextView-->
-        <!--android:id="@+id/displayResult"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="ผล"-->
-        <!--android:layout_weight="1"/>-->
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_marginTop="20dp"
+                      android:layout_marginLeft="20dp"
+                      android:layout_marginRight="20dp">
+
+            <TableLayout
+                    android:id="@+id/table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="5"/>
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/displayNo"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="เลขที่"-->
+            <!--android:layout_weight="1"/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/displayName"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="ชื่อ"-->
+            <!--android:layout_weight="3"/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/displayResult"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="ผล"-->
+            <!--android:layout_weight="1"/>-->
+
+
+        </LinearLayout>
 
 
     </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

@@ -82,6 +82,11 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
             }
             exportToCSV()
         }
+
+        submit.setOnClickListener {
+
+            loadStudentInfo(etStudentID.text.toString())
+        }
     }
 
     private fun compareList(first: MutableList<Student>, second: MutableList<Student>): MutableList<Student>{
@@ -151,6 +156,17 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         statusSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 status = parent.getItemAtPosition(position).toString()
+
+                when(status.equals("ลา", ignoreCase = true) or status.equals("ขาด", ignoreCase = true)){
+                    true -> {
+                        mScannerView?.stopCamera()
+                        rlContent.visibility = View.VISIBLE
+                    }
+                    false -> {
+                        rlContent.visibility = View.GONE
+                        mScannerView?.startCamera()
+                    }
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
