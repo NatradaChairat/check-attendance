@@ -18,9 +18,7 @@ import com.google.zxing.Result
 import com.opencsv.CSVWriter
 import kotlinx.android.synthetic.main.activity_classroom.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
+import java.io.*
 import java.nio.charset.Charset
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -253,10 +251,19 @@ class AttendanceActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
 
         writer = if (file.exists() && !file.isDirectory) {
-            var mFileWriter = FileWriter(filePath, true)
+            val os = FileOutputStream(file, true)
+            os.write(0xef)
+            os.write(0xbb)
+            os.write(0xbf)
+            var mFileWriter = OutputStreamWriter(os)
             CSVWriter(mFileWriter)
         } else {
-            CSVWriter(FileWriter(filePath))
+
+            val os = FileOutputStream(file)
+            os.write(0xef)
+            os.write(0xbb)
+            os.write(0xbf)
+            CSVWriter(OutputStreamWriter(os))
         }
 
         var dataTopic = arrayOf("เช็คชื่อ $title วันที่ ${today()}")
